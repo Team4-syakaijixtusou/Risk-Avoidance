@@ -1,32 +1,108 @@
-/*BlueSkyのUIが動的に変わる場合、
-data-testid属性や一意な部分のあるセレクター
-（例: buttonタグの位置をもとに指定）を使います。
-システムに組み込むときにその部分変更したほうがいいかも*/
+window.addEventListener("load", () => {
+    const observer = new MutationObserver(() => {
+        // 少し待機してからボタンを処理
+        setTimeout(() => {
+            const allButtons = document.querySelectorAll("button");
+            const buttonArray = Array.from(allButtons);
 
-// 透明な画像を作成
-const overlayImage = document.createElement('img');
-overlayImage.src = 'post.png'; // 透明な画像のURLを指定、もしくは空のまま
-overlayImage.style.position = 'absolute';
-overlayImage.style.width = '100%';
-overlayImage.style.height = '100%';
-overlayImage.style.top = '0';
-overlayImage.style.left = '0';
-overlayImage.style.cursor = 'pointer';
-overlayImage.style.zIndex = '10'; // 投稿ボタンより前面に表示
+            // 条件に合うボタンをnewpostButtonArrayに追加
+            const newpostButtonArray = buttonArray.filter(button => {
+                const ariaLabel = button.getAttribute("aria-label");
+                return ariaLabel === "新しい投稿" || ariaLabel === "New post" || ariaLabel === "Create New post" || ariaLabel === "新しい投稿を作成";
+            });
 
-// BlueSkyの「投稿」ボタンを取得してその位置に配置
-const postButton = document.querySelector('[data-testid="composerPublishBtn"]'); // 投稿ボタンの正確なセレクターを指定
-postButton.style.position = 'relative'; // 位置を相対的に調整
-postButton.appendChild(overlayImage);
+            // ⑥ ボタンがクリックされた場合に画像を表示する処理
+            newpostButtonArray.forEach(button => {
+                button.addEventListener("click", image_appear);
+            });
 
-// 画像クリック時にAIへ通知を実行
-overlayImage.addEventListener('click', (e) => {
-    e.preventDefault();
-    alert("投稿ボタンがクリックされました！"); // 通知を表示
+            // "Cancel"ボタンの処理
+            const cancelButtonArray = buttonArray.filter(button => {
+                const ariaLabel = button.getAttribute("aria-label");
+                return ariaLabel === "Cancel";
+            });
 
-    // ここに必要なAIへの通知処理を追加
+            cancelButtonArray.forEach(button => {
+                button.addEventListener("click", remove_image);
+            });
+        }, 100); // 少し遅延させてから実行
+    });
 
+    // DOMの変化を監視 (ボタン要素が追加されるときなど)
+    observer.observe(document.body, { childList: true, subtree: true });
 });
+
+let imgElement; // グローバル変数で管理
+let positionUpdateInterval; // 位置更新用のinterval
+
+function image_appear() {
+    if (!imgElement) { // 既に画像が存在していない場合のみ生成
+        imgElement = document.createElement('img');
+
+        // パスを修正
+        imgElement.src = chrome.runtime.getURL('./images/image.png'); // URLを指定（パスに注意）
+
+        // 初期スタイルを適用
+        Object.assign(imgElement.style, {
+            position: 'absolute',  // 絶対位置
+            zIndex: '1000',        // 他の要素の上に表示
+            width: '150px',        // 画像のサイズを指定
+            height: '120px',
+            opacity: '0.0',        // 不透明
+        });
+
+        // ページに追加
+        document.body.appendChild(imgElement);
+
+        // 位置を更新するintervalを設定
+        positionUpdateInterval = setInterval(updateImagePosition, 100);
+
+        // クリックイベントを登録
+        imgElement.addEventListener('click', () => {
+            // contenteditableなdiv要素を取得
+            const editableDiv = document.querySelector('.tiptap');
+            if (editableDiv) {
+                const pElement = editableDiv.querySelector('p');
+                if (pElement) {
+                    const textContent = pElement.textContent;
+                    console.log('取得したテキスト:', textContent);
+
+                    // 取得したテキストを別の変数に格納 (例)
+                    let extractedText = textContent;
+                    chrome.runtime.sendMessage(
+                        {
+                            type: 'toBackground',
+                            data: extractedText,
+                        });
+                    // TODO: 取得したテキストを使ってやりたいことをここに記述
+                } else {
+                    console.log('pタグが見つかりません。');
+                }
+            } else {
+                console.log('contenteditableなdiv要素が見つかりません。');
+            }
+        });
+    }
+}
+
+function remove_image() {
+    if (imgElement) { // 画像が存在する場合のみ削除
+        imgElement.remove();
+        imgElement = null; // 参照をクリア
+
+        // 位置更新のintervalを停止
+        clearInterval(positionUpdateInterval);
+    }
+}
+
+function updateImagePosition() {
+    const publishButton = document.querySelector('button[aria-label="Publish post"]');
+    if (publishButton) {
+        const rect = publishButton.getBoundingClientRect(); // ボタンの位置を取得
+        imgElement.style.top = `${rect.top + window.scrollY}px`; // ボタンのY座標
+        imgElement.style.left = `${rect.left + window.scrollX}px`; // ボタンのX座標
+    }
+}
 
 
 // gif画像を挿入するための要素を作成
@@ -35,13 +111,13 @@ let gifElement = document.createElement('img');
 gifElement.id = 'character-image';
 
 // パスを修正
-gifElement.src = chrome.runtime.getURL('post.png'); // GIFのURLを指定（パスに注意）
+gifElement.src = chrome.runtime.getURL('./images/image.png'); // GIFのURLを指定（パスに注意）
 
 // 初期スタイルを適用
 Object.assign(gifElement.style, {
     position: 'fixed',  // 固定位置
     left: '10px',       // 初期位置（左）
-    top: '10px',        // 初期位置（上）
+    top: '100px',        // 初期位置（上）
     zIndex: '1000',     // 他の要素の上に表示
     width: '150px',     // GIFのサイズを指定
     height: '150px',
@@ -103,6 +179,8 @@ window.addEventListener('resize', () => {
 document.body.appendChild(gifElement);
 
 
+
+
 /*受け取ったテキストの量に応じて吹き出しの形状を調整し
 その形状に応じて画像を生成し、吹き出しを画面に表示されている
 キャラクター画像の上部に表示し、そのキャラクターがしゃべっているように表示するコード
@@ -121,8 +199,12 @@ const characterImage = document.querySelector('#character-image'); // キャラ�
 /*キャラクター画像のID（またはclass）を正しく設定する必要があります。
 #character-imageは例ですので、実際のHTMLに合わせて変更してください。*/
 
-
-const text = "testaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+const text="";
+chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
+    if (message.type === 'toContent'){
+        text = message.data.toString();
+    }
+});
 // Canvas要素のコンテキストを取得
 const context = tooltipCanvas.getContext('2d');
 // テキストの長さに基づいてキャンバスサイズを決定
@@ -194,8 +276,8 @@ document.body.appendChild(image);
 const characterRect = characterImage.getBoundingClientRect();
 // 吹き出し画像をキャラクターの上部に表示
 image.style.position = 'absolute';
-image.style.left = `${characterRect.left + characterRect.width / 2 - canvasWidth / 2}px`; // キャラクターの中央上
-image.style.top = `${characterRect.top - canvasHeight - 10}px`; // キャラクターの上に少し余裕を持たせる
+image.style.left = `50px`; // キャラクターの中央上
+image.style.top = `30px`; // キャラクターの上に少し余裕を持たせる
 // 閉じるボタンのスタイル設定
 closeButton.textContent = '×';  // 閉じるボタンのラベル
 closeButton.style.position = 'absolute';

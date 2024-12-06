@@ -9,5 +9,16 @@
           "js": ["content/index.js"]
         }
     ],
-    "host_permissions": ["<all_urls>"]
+    "background": {
+    "service_worker": "background/index.js",
+    "type": "module"
+    },
+    "permissions": ["tabs", "scripting"],
+    "host_permissions": ["<all_urls>"],
+    "web_accessible_resources": [
+    {
+      "resources": [ "images/image.png" ],
+      "matches": [ "https://*/*" ]
+    }
+  ]
   }
