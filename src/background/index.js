@@ -1,7 +1,7 @@
 chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
     if (message.type === 'toBackground'){
         const API_URL = 'aaa';
-        const url = API_URL + '?' + message.data.toString();
+        const url = API_URL + '/' + message.data.toString();
         const res = await fetch(url, {
         method: 'GET',
         mode: 'cors',
