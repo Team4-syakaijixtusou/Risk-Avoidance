@@ -1,24 +1,24 @@
 {
-    "manifest_version": 3,
-    "name": "Risk Avoidance",
-    "description": "A web browser extension (Manifest V3) for risk avoidance in Bluesky",
-    "version": "1.0",
-    "content_scripts": [
-        {
-          "matches": ["https://bsky.app/"],
-          "js": ["content/index.js"]
-        }
-    ],
-    "background": {
+  "manifest_version": 3,
+  "name": "Risk Avoidance",
+  "description": "A web browser extension (Manifest V3) for risk avoidance in Bluesky",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "matches": ["https://bsky.app/*"],
+      "js": ["content/index.js", "content/character.js", "content/pop-up.js"]
+    }
+  ],
+  "background": {
     "service_worker": "background/index.js",
     "type": "module"
-    },
-    "permissions": ["tabs", "scripting"],
-    "host_permissions": ["<all_urls>"],
-    "web_accessible_resources": [
+  },
+  "permissions": ["tabs", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
     {
-      "resources": [ "images/image.png" ],
-      "matches": [ "https://*/*" ]
+      "resources": ["images/image.png"],
+      "matches": ["https://*/*"]
     }
   ]
-  }
+}
