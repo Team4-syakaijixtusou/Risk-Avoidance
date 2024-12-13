@@ -77,7 +77,7 @@ function image_appear() {
           let extractedText = textContent;
           chrome.runtime.sendMessage({
             type: "toBackground",
-            data: extractedText,
+            data: extractedText
           });
 
           // APIから受け取ったJsonを処理
