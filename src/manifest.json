@@ -17,7 +17,7 @@
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
-      "resources": ["images/image.png"],
+      "resources": ["/images/*", "overlay.js", "character.js", "pop-up.js"],
       "matches": ["https://*/*"]
     }
   ],
