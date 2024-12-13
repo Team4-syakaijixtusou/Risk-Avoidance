@@ -87,8 +87,10 @@ function image_appear() {
             sendResponse
           ) {
             if (request.type === "toContent") {
-              console.log("overly.jsで受け取ったメッセージ: ", request);
-              // ここに処理を記述
+              console.log(
+                `Score: ${request.data.score}\nContents: ${request.data.contents}`
+              );
+              // AIから受け取った文章の処理をここに
             }
           });
         } else {
