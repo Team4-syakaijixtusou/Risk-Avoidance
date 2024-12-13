@@ -3,7 +3,7 @@
 let gifElement = document.createElement("img");
 
 // パスを修正
-gifElement.src = chrome.runtime.getURL("images/apng.png"); // GIFのURLを指定（パスに注意）
+gifElement.src = chrome.runtime.getURL("./images/apng.png"); // GIFのURLを指定（パスに注意）
 
 // 初期スタイルを適用
 Object.assign(gifElement.style, {
