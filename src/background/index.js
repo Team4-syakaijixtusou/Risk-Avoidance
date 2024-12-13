@@ -1,5 +1,5 @@
 chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
-    if (message.type === 'toBackground'){
+    if (message.type === "toBackground"){
         const API_URL = 'aaa';
         const url = API_URL + '/' + message.data.toString();
         const res = await fetch(url, {
@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
 
             chrome.tabs.sendMessage(id, {
                 type: 'toContent',
-                data: 'result'
+                data: result
             })
         });
     }

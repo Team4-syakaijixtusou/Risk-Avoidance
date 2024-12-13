@@ -6,7 +6,8 @@
   "content_scripts": [
     {
       "matches": ["https://bsky.app/*"],
-      "js": ["content/index.js", "content/character.js", "content/pop-up.js"]
+      "js": ["content/index.js", "content/character.js", "content/pop-up.js"],
+      "css": ["options/style.css"]
     }
   ],
   "background": {
@@ -20,5 +21,9 @@
       "resources": ["images/image.png"],
       "matches": ["https://*/*"]
     }
-  ]
+  ],
+  "options_ui": {
+    "page": "options/index.html",
+    "open_in_tab": true
+  }
 }
