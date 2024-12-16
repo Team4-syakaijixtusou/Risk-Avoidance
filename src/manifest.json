@@ -6,8 +6,7 @@
   "content_scripts": [
     {
       "matches": ["https://bsky.app/*"],
-      "js": ["content/index.js", "content/character.js", "content/pop-up.js"],
-      "css": ["options/style.css"]
+      "js": ["content/overlay.js", "content/character.js", "content/pop-up.js"]
     }
   ],
   "background": {
@@ -18,7 +17,7 @@
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
-      "resources": ["images/image.png"],
+      "resources": ["/images/*", "overlay.js", "character.js", "pop-up.js"],
       "matches": ["https://*/*"]
     }
   ],
