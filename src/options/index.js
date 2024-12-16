@@ -9,6 +9,6 @@ window.onload = function() {
 }
 
 select.onchange = function(){
-    chrome.storage.local.set({ "chara": select.value});
+    chrome.storage.local.set({ "chara": select.value });
 }
 

@@ -2,8 +2,20 @@
 // gif画像を挿入するための要素を作成
 let gifElement = document.createElement("img");
 
+let charaNum;
 // パスを修正
-gifElement.src = chrome.runtime.getURL("./images/apng.png"); // GIFのURLを指定（パスに注意）
+chrome.storage.local.get("chara", function (value){
+  charaNum = value.chara;
+});
+let charaUrl;
+if (charaNum === 0 || typeof charaNum === "undefined"){
+  charaUrl = "./images/apng.png";
+} else if (charaNum === 1){
+  charaUrl = "./images/firefighter_bear.gif";
+}else if (charaNum === 2){
+  charaUrl = "./images/firefighter_bear.gif";
+}
+gifElement.src = chrome.runtime.getURL(charaUrl); // GIFのURLを指定（パスに注意）
 
 // 初期スタイルを適用
 Object.assign(gifElement.style, {
