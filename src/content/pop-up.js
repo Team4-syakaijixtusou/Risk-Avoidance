@@ -1,118 +1,146 @@
-/*受け取ったテキストの量に応じて吹き出しの形状を調整し
-その形状に応じて画像を生成し、吹き出しを画面に表示されている
-キャラクター画像の上部に表示し、そのキャラクターがしゃべっているように表示するコード
-Canvas APIを使用して、吹き出しの画像を生成し、テキストをその上に描画する*/
-
 // 吹き出し要素を作成
-const tooltipCanvas = document.createElement("canvas");
-const closeButton = document.createElement("button");
+const tooltipCanvas = document.createElement('canvas');
+const closeButton = document.createElement('button');
 
-// 吹き出しと閉じるボタンをページに追加
-document.body.appendChild(tooltipCanvas);
+// 初期テキスト
+let text = "こんにちは！僕はファイアファイターベア！あなたのSNSを安全にします！";
+
+// テキストスタイルとキャンバスサイズを設定
+const padding = 10;
+const fontSize = 17;
+const maxTextWidth = fontSize * 15; // fontSizeに基づいて最大幅を設定
+const maxCharsPerLine = 17; // 1行あたりの最大文字数
+const lineHeight = fontSize + 10;
+
+function updateTooltip(newText) {
+  text = newText || text;
+
+  const context = tooltipCanvas.getContext('2d');
+  context.font = `${fontSize}px Arial`;
+
+  // テキストを指定された文字数ごとに分割
+  const lines = [];
+  for (let i = 0; i < text.length; i += maxCharsPerLine) {
+    lines.push(text.slice(i, i + maxCharsPerLine));
+  }
+
+  // 独立した変数でキャンバスサイズを管理
+  let canvasWidth, canvasHeight;
+  canvasWidth = maxTextWidth + padding * 2;
+  canvasHeight = lineHeight * lines.length + padding * 2 + 10; // 吹き出し用三角形の高さ
+
+  // 解像度スケール対応
+  const resolutionScale = 2; // 解像度スケール（2倍の場合）
+  tooltipCanvas.width = canvasWidth * resolutionScale;
+  tooltipCanvas.height = canvasHeight * resolutionScale;
+
+  // スケール設定
+  context.scale(resolutionScale, resolutionScale);
+
+  // 吹き出し背景を描画（スケール考慮）
+  context.fillStyle = '#333';
+  context.beginPath();
+  context.moveTo(padding, padding);
+  context.lineTo(canvasWidth - padding, padding);
+  context.lineTo(canvasWidth - padding, canvasHeight - padding - 10);
+  context.lineTo(canvasWidth / 2 + 10, canvasHeight - padding - 10);
+  context.lineTo(canvasWidth / 2, canvasHeight - padding);
+  context.lineTo(canvasWidth / 2 - 10, canvasHeight - padding - 10);
+  context.lineTo(padding, canvasHeight - padding - 10);
+  context.closePath();
+  context.fill();
+
+  // テキストを描画（スケール考慮）
+  context.fillStyle = '#fff';
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+
+  let y = padding + lineHeight / 2;
+lines.forEach((line) => {
+  context.fillText(line, canvasWidth / 2, y);
+  y += lineHeight;
+});
+
+
+  // 吹き出し画像として表示
+  const image = document.querySelector('img[data-tooltip]') || new Image();
+  image.src = tooltipCanvas.toDataURL();
+
+  // 独立した変数で画像サイズを管理
+  const imageWidth = 500;
+  const imageHeight = canvasHeight;
+
+  image.style.position = 'fixed';
+  image.style.zIndex = '999';
+  image.style.width = `${imageWidth}px`; // キャンバスサイズから取得
+  // image.style.height = `${imageHeight}px`; // キャンバスサイズから取得
+  image.dataset.tooltip = true;
+
+  // キャラクター画像を特定
+  const characterImage = document.querySelector('img[src*="/images/apng.png"]');
+
+  if (characterImage) {
+    const updateTooltipPosition = () => {
+      const characterRect = characterImage.getBoundingClientRect();
+      image.style.left = `${characterRect.left + characterRect.width / 2 - imageWidth / 2}px`;
+      image.style.top = `${characterRect.top - imageHeight - 10}px`;
+
+      closeButton.style.left = `${parseInt(image.style.left) + imageWidth - 20}px`;
+      closeButton.style.top = `${parseInt(image.style.top) - 20}px`;
+    };
+
+    updateTooltipPosition();
+
+    const observer = new MutationObserver(updateTooltipPosition);
+    observer.observe(characterImage, { attributes: true, childList: true, subtree: true });
+
+    window.addEventListener('resize', updateTooltipPosition);
+    window.addEventListener('scroll', updateTooltipPosition);
+  }
+
+  document.body.appendChild(image);
+}
+
+// 初期描画
+updateTooltip(text);
+
+// 吹き出し画像と閉じるボタンをページに追加
 document.body.appendChild(closeButton);
 
-// キャラクター画像を取得
-const characterImage = document.querySelector("#character-image"); // キャラクター画像のID
-/*キャラクター画像のID（またはclass）を正しく設定する必要があります。
-#character-imageは例ですので、実際のHTMLに合わせて変更してください。*/
-
-const text = "testaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-// Canvas要素のコンテキストを取得
-const context = tooltipCanvas.getContext("2d");
-// テキストの長さに基づいてキャンバスサイズを決定
-const padding = 20;
-const fontSize = 16;
-const maxTextWidth = 300; // テキストの最大幅
-context.font = `${fontSize}px Arial`;
-const textMetrics = context.measureText(text);
-let textWidth = textMetrics.width;
-let lines = 1;
-// テキストが最大幅を超える場合は折り返し
-if (textWidth > maxTextWidth) {
-  lines = Math.ceil(textWidth / maxTextWidth);
-  textWidth = maxTextWidth;
-}
-const lineHeight = fontSize + 10;
-const canvasWidth = textWidth + padding * 2;
-const canvasHeight = lineHeight * lines + padding * 2;
-tooltipCanvas.width = canvasWidth;
-tooltipCanvas.height = canvasHeight;
-// 吹き出しの背景を描画
-context.fillStyle = "#333";
-context.strokeStyle = "#333";
-context.lineWidth = 2;
-
-// 吹き出しの形状（四角形＋下向きの三角形）を描画
-const triangleHeight = 10;
-const triangleWidth = 20;
-
-context.beginPath();
-context.moveTo(padding, padding);
-context.lineTo(canvasWidth - padding, padding);
-context.lineTo(canvasWidth - padding, canvasHeight - padding - triangleHeight);
-context.lineTo(
-  canvasWidth / 2 + triangleWidth / 2,
-  canvasHeight - padding - triangleHeight
-);
-context.lineTo(canvasWidth / 2, canvasHeight - padding);
-context.lineTo(
-  canvasWidth / 2 - triangleWidth / 2,
-  canvasHeight - padding - triangleHeight
-);
-context.lineTo(padding, canvasHeight - padding - triangleHeight);
-context.closePath();
-context.fill();
-// テキストを描画
-context.fillStyle = "#fff";
-context.font = `${fontSize}px Arial`;
-context.textAlign = "center";
-context.textBaseline = "middle";
-const x = canvasWidth / 2;
-let y = padding + lineHeight / 2;
-
-const words = text.split(" ");
-let currentLine = "";
-for (let i = 0; i < words.length; i++) {
-  const word = words[i];
-  const testLine = currentLine + word + " ";
-  const testWidth = context.measureText(testLine).width;
-
-  if (testWidth > textWidth && currentLine !== "") {
-    context.fillText(currentLine, x, y);
-    currentLine = word + " ";
-    y += lineHeight;
-  } else {
-    currentLine = testLine;
-  }
-}
-context.fillText(currentLine, x, y);
-// 生成された吹き出しを画像として表示
-const image = new Image();
-image.src = tooltipCanvas.toDataURL();
-document.body.appendChild(image);
-// キャラクター画像の位置を取得
-const characterRect = characterImage.getBoundingClientRect();
-// 吹き出し画像をキャラクターの上部に表示
-image.style.position = "absolute";
-image.style.left = `${
-  characterRect.left + characterRect.width / 2 - canvasWidth / 2
-}px`; // キャラクターの中央上
-image.style.top = `${characterRect.top - canvasHeight - 10}px`; // キャラクターの上に少し余裕を持たせる
 // 閉じるボタンのスタイル設定
-closeButton.textContent = "×"; // 閉じるボタンのラベル
-closeButton.style.position = "absolute";
-closeButton.style.left = `${image.style.left}px`;
-closeButton.style.top = `${parseInt(image.style.top) - 30}px`; // 吹き出しの上に表示
-closeButton.style.fontSize = "20px";
-closeButton.style.padding = "5px";
-closeButton.style.cursor = "pointer";
-closeButton.style.backgroundColor = "red";
-closeButton.style.color = "white";
-closeButton.style.border = "none";
-closeButton.style.borderRadius = "50%";
+closeButton.textContent = '×';
+closeButton.style.position = 'fixed';
+closeButton.style.fontSize = '14px';
+closeButton.style.padding = '5px';
+closeButton.style.cursor = 'pointer';
+closeButton.style.backgroundColor = 'red';
+closeButton.style.color = 'white';
+closeButton.style.border = 'none';
+closeButton.style.borderRadius = '50%';
 
-// 閉じるボタンをクリックしたときの動作
-closeButton.addEventListener("click", () => {
-  image.remove(); // 吹き出し画像を削除
-  closeButton.remove(); // 閉じるボタンを削除
+// 閉じるボタンのクリック動作
+closeButton.addEventListener('click', () => {
+  const image = document.querySelector('img[data-tooltip]');
+  if (image) image.remove();
+  closeButton.remove();
 });
+
+// 外部から文字列を受け取り吹き出しを更新
+window.addEventListener('message', (event) => {
+  if (typeof event.data === 'string') {
+    updateTooltip(event.data);
+  }
+});
+
+chrome.runtime.onMessage.addListener(async function (
+  request,
+  sender,
+  sendResponse
+) {
+  if (request.type === "toContent") {
+    console.log(
+      `Score: ${request.data.score}\nContents: ${request.data.contents}`,
+      updateTooltip(request.data.contents)
+    );
+  }}
+);
