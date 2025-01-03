@@ -40,6 +40,9 @@ window.addEventListener("load", () => {
 let imgElement; // グローバル変数で管理
 let positionUpdateInterval; // 位置更新用のinterval
 
+let isImageClicked = false; // 画像がクリックされたかどうかを判定するフラグ
+let isPostButtonClicked = false;
+
 function image_appear() {
   if (!imgElement) {
     // 既に画像が存在していない場合のみ生成
@@ -54,7 +57,7 @@ function image_appear() {
       zIndex: "1000", // 他の要素の上に表示
       width: "150px", // 画像のサイズを指定
       height: "120px",
-      opacity: "0.0", // 不透明
+      opacity: "1.0", // 不透明
     });
 
     // ページに追加
@@ -65,6 +68,12 @@ function image_appear() {
 
     // クリックイベントを登録
     imgElement.addEventListener("click", () => {
+      if (isImageClicked) {
+        console.log("画像はすでにクリックされています。リクエストをスキップします。");
+        return; // クリック済みならリクエストをスキップ
+      }
+
+      isImageClicked = true; // クリック済みに設定
       // contenteditableなdiv要素を取得
       const editableDiv = document.querySelector(".tiptap");
       if (editableDiv) {
@@ -81,6 +90,7 @@ function image_appear() {
           });
 
           // APIから受け取ったJsonを処理
+          // 修正箇所: AIからのスコアを評価して画像を削除
           chrome.runtime.onMessage.addListener(async function (
             request,
             sender,
@@ -88,11 +98,28 @@ function image_appear() {
           ) {
             if (request.type === "toContent") {
               console.log(
-                `Score: ${request.data.score}\nContents: ${request.data.contents}`
+                `Received contents: ${request.data.contents}`
               );
-              // AIから受け取った文章の処理をここに
+          
+              const standardscore = 50; // 閾値を設定
+          
+              // 「危険度スコア: n」を正規表現で抽出
+              const scoreMatch = request.data.contents.match(/危険度スコア\s*:\s*(\d+)/);
+              if (scoreMatch) {
+                const receivedScore = parseInt(scoreMatch[1], 10); // スコアを数値として取得
+                console.log(`Extracted score: ${receivedScore}`);
+          
+                if (receivedScore <= standardscore) {
+                  console.log("危険度が低いため、画像を削除します。");
+                  remove_image(); // 閾値以下なら画像を削除
+                }
+              } else {
+                console.log("危険度スコアが含まれていません。");
+              }
             }
           });
+          
+
         } else {
           console.log("pタグが見つかりません。");
         }
@@ -124,3 +151,4 @@ function updateImagePosition() {
     imgElement.style.left = `${rect.left + window.scrollX}px`; // ボタンのX座標
   }
 }
+
