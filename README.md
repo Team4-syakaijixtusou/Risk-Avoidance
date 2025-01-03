@@ -9,7 +9,8 @@
 1.次のURLからGemini API keyを取得する (https://aistudio.google.com/app/apikey)<br>
 2.取得したAPI keyを環境変数に GEMINI_API_KEY という名前で追加(これでGemini APIが使えるようになった)<br>
 3.PC再起動<br>
-4.解凍した拡張機能フォルダの「API」ディレクトリでコマンドプロンプトを開き、python main.py を実行すると、APIを拡張機能から呼び出せるようになる
+4.拡張機能のzipファイルを解凍<br>
+5.「API」ディレクトリでコマンドプロンプトを開き、python main.py を実行すると、APIを拡張機能から呼び出せるようになる
 
 ## How To Use 
 上記の手順を踏み、拡張機能としての機能が有効化された状態でBlueSkyにアクセスすると、Chrome画面上にキャラクターが現れます。
