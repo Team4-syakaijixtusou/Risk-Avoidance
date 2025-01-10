@@ -57,7 +57,7 @@ function image_appear() {
       zIndex: "1000", // 他の要素の上に表示
       width: "150px", // 画像のサイズを指定
       height: "120px",
-      opacity: "1.0", // 不透明
+      opacity: "0.0", // 不透明
       webkitUserDrag: "none", // ドラッグ時に画像が添付されない
     });
 

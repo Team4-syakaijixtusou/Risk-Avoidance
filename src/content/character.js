@@ -11,9 +11,9 @@ let charaUrl;
 if (charaNum === 0 || typeof charaNum === "undefined"){
   charaUrl = "./images/apng.png";
 } else if (charaNum === 1){
-  charaUrl = "./images/apng.png";
+  charaUrl = "./images/firefighter_bear.gif";
 }else if (charaNum === 2){
-  charaUrl = "./images/apng.png";
+  charaUrl = "./images/firefighter_bear.gif";
 }
 gifElement.src = chrome.runtime.getURL(charaUrl); // GIFのURLを指定（パスに注意）
 
@@ -21,7 +21,7 @@ gifElement.src = chrome.runtime.getURL(charaUrl); // GIFのURLを指定（パス
 Object.assign(gifElement.style, {
   position: "fixed", // 固定位置
   left: "10px", // 初期位置（左）
-  top: "30px", // 初期位置（上）
+  top: "200px", // 初期位置（上）
   zIndex: "1000", // 他の要素の上に表示
   width: "150px", // GIFのサイズを指定
   height: "150px",
