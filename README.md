@@ -12,7 +12,7 @@ https://forms.office.com/r/GpxXq09HQZ
 2. 取得したAPI keyを環境変数に GEMINI_API_KEY という名前で追加(これでGemini APIが使えるようになった)<br>
 3. PC再起動<br>
 4. 拡張機能のzipファイルを解凍<br>
-5. 「API」ディレクトリでコマンドプロンプトを開き、python main.py を実行すると、APIを拡張機能から呼び出せるようになる<br>
+5. 「API」ディレクトリでコマンドプロンプトを開き、①.\en\Scripts\activate　②python main.py を実行すると、APIを拡張機能から呼び出せるようになる<br>
 
 ### データベース機能の有効化
 a
