@@ -147,3 +147,4 @@ chrome.runtime.onMessage.addListener(async function (
     );
   }}
 );
+
