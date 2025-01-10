@@ -32,12 +32,13 @@
 
 .charas {
     display: flex;
-    flex-wrap: wrap-reverse;
     justify-content: center;
 }
 
 .chara1, .chara2, .chara3 {
     margin: 0 20px;
+    height: 50%;
+    width: 50%;
 }
 
 
