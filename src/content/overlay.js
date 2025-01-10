@@ -58,7 +58,7 @@ function image_appear() {
       width: "150px", // 画像のサイズを指定
       height: "120px",
       opacity: "1.0", // 不透明
-      webkitUserDrag: "none", // ドラッグ時の画像表示を無効化
+      webkitUserDrag: "none", // ドラッグ時に画像が添付されない
     });
 
     // ページに追加
