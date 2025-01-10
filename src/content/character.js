@@ -9,7 +9,7 @@ chrome.storage.local.get("chara", function (value){
 });
 let charaUrl;
 if (charaNum === 0 || typeof charaNum === "undefined"){
-  charaUrl = "./images/apng.png";
+  charaUrl = "./images/firefighter_bear.png";
 } else if (charaNum === 1){
   charaUrl = "./images/firefighter_bear.gif";
 }else if (charaNum === 2){
