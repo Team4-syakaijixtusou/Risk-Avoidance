@@ -7,9 +7,11 @@ let text = "こんにちは！僕はファイアファイターベア！あな�
 
 // テキストスタイルとキャンバスサイズを設定
 const padding = 10;
-let fontSize;
+let fontSize = 17;
 chrome.storage.local.get("fontSize", function (value){
-  fontSize = value.fontSize;
+  if (!typeof value.fontSize === undefined){
+    fontSize = value.fontSize;
+  }
 })
 const maxTextWidth = fontSize * 15; // fontSizeに基づいて最大幅を設定
 const maxCharsPerLine = 17; // 1行あたりの最大文字数

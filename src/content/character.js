@@ -11,9 +11,9 @@ let charaUrl;
 if (charaNum === 0 || typeof charaNum === "undefined"){
   charaUrl = "./images/apng.png";
 } else if (charaNum === 1){
-  charaUrl = "./images/firefighter_bear.gif";
+  charaUrl = "./images/apng.png";
 }else if (charaNum === 2){
-  charaUrl = "./images/firefighter_bear.gif";
+  charaUrl = "./images/apng.png";
 }
 gifElement.src = chrome.runtime.getURL(charaUrl); // GIFのURLを指定（パスに注意）
 
