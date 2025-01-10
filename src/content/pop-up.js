@@ -7,7 +7,7 @@ let text = "こんにちは！僕はファイアファイターベア！あな�
 
 // テキストスタイルとキャンバスサイズを設定
 const padding = 10;
-let fontSize;
+let fontSize = 20;
 chrome.storage.local.get("fontSize", function (value){
   fontSize = value.fontSize;
 })
