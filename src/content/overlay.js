@@ -58,6 +58,7 @@ function image_appear() {
       width: "150px", // 画像のサイズを指定
       height: "120px",
       opacity: "1.0", // 不透明
+      webkitUserDrag: "none", // ドラッグ時の画像表示を無効化
     });
 
     // ページに追加
@@ -81,6 +82,9 @@ function image_appear() {
         if (pElement) {
           const textContent = pElement.textContent;
           console.log("取得したテキスト:", textContent);
+
+          // キャラクターが、AIの返答を待っていることを示すメッセージを表示
+          updateTooltip("AIの返答を待っています...");
 
           // 取得したテキストをAPIに送信
           let extractedText = textContent;

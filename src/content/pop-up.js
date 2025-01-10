@@ -73,6 +73,7 @@ lines.forEach((line) => {
   image.style.position = 'fixed';
   image.style.zIndex = '999';
   image.style.width = `${imageWidth}px`; // キャンバスサイズから取得
+  image.style.webkitUserDrag = "none"; // ドラッグ時の画像表示を無効化
   // image.style.height = `${imageHeight}px`; // キャンバスサイズから取得
   image.dataset.tooltip = true;
 
@@ -132,6 +133,7 @@ window.addEventListener('message', (event) => {
   }
 });
 
+// APIから受け取ったjsonを処理
 chrome.runtime.onMessage.addListener(async function (
   request,
   sender,

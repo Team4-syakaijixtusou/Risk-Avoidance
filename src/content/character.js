@@ -27,6 +27,7 @@ Object.assign(gifElement.style, {
   height: "150px",
   opacity: "1.0", // 少し透明に
   cursor: "grab", // ドラッグ可能なことを示すカーソル
+  webkitUserDrag: "none", // ドラッグ時の画像表示を無効化
 });
 
 // ドラッグ用の変数
