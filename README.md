@@ -8,16 +8,17 @@ Chorome拡張機能としてこのアプリを読み込むと、BlueSky上でユ
 https://forms.office.com/r/GpxXq09HQZ
 ## インストール方法
 このアプリを有効化するには、先にいくつかの設定を適用してもらう必要があります。お手数ですが以下の手順を踏んでから利用を開始してください。<br>
-### Gemini APIの有効化
-1. 次のURLからGemini API keyを取得する (https://aistudio.google.com/app/apikey)<br>
-2. 取得したAPI keyを環境変数に GEMINI_API_KEY という名前で追加(これでGemini APIが使えるようになった)<br>
-3. PC再起動<br>
-4. 拡張機能のzipファイルを解凍<br>
-5. 「API」ディレクトリでコマンドプロンプトを開き、①.\en\Scripts\activate　②python main.py を実行すると、APIを拡張機能から呼び出せるようになる<br>
 
 ### 拡張機能の読み込み
-1. Chromeを開き、右上のツールバーから「拡張機能」→「拡張機能を管理」を選択し、左上の「パッケージ化されていない拡張機能を読み込む」をクリック<br>
-2. 解凍した拡張機能フォルダのsrcフォルダを読み込む<br>
+1. 次のURLにアクセスし、拡張機能のzipファイルをダウンロードする。()<br>
+2. ダウンロードしたzipファイルを適当な場所で解凍する。
+3. Chromeを開き、右上のツールバーから「拡張機能」→「拡張機能を管理」を選択し、左上の「パッケージ化されていない拡張機能を読み込む」をクリック<br>
+4. 解凍した拡張機能フォルダのsrcフォルダを読み込む(この時読み込むのは、「manifest.json」が直下にあるsrcフォルダ)<br>
+これで拡張機能を読み込むことが出来ました。
+
+### Gemini APIの有効化
+1. 次のURLからGemini API keyを取得する。(https://aistudio.google.com/app/apikey)<br>
+2. Chromeの右上にある「拡張機能」からRisk Avoidanceの︙をクリック、オプション＞Gemini Api Keyの欄に取得したAPI keyを入力する
 
 ## How To Use 
 上記の手順を踏み、拡張機能としての機能が有効化された状態でBlueSkyにアクセスすると、Chrome画面上にキャラクターが現れます。
