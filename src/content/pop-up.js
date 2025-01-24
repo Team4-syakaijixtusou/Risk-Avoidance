@@ -9,7 +9,7 @@ let text = "こんにちは！僕はファイアファイターベア！あな�
 const padding = 10;
 let fontSize = 20;
 chrome.storage.local.get("fontSize", function (value){
-  if (!typeof value.fontSize === undefined){
+  if (!(typeof value.fontSize === "undefined")){
     fontSize = value.fontSize;
   }
 })
@@ -145,9 +145,9 @@ chrome.runtime.onMessage.addListener(async function (
   sendResponse
 ) {
   if (request.type === "toContent") {
+    updateTooltip(request.data);
     console.log(
-      `Score: ${request.data.score}\nContents: ${request.data.contents}`,
-      updateTooltip(request.data.contents)
+      request.data,
     );
   }}
 );

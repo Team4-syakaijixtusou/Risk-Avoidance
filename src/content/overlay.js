@@ -102,13 +102,13 @@ function image_appear() {
           ) {
             if (request.type === "toContent") {
               console.log(
-                `Received contents: ${request.data.contents}`
+                `Received contents: ${request.data}`
               );
           
               const standardscore = 50; // 閾値を設定
           
               // 「危険度スコア: n」を正規表現で抽出
-              const scoreMatch = request.data.contents.match(/危険度スコア\s*:\s*(\d+)/);
+              const scoreMatch = request.data.match(/危険度スコア\s*:\s*(\d+)/);
               if (scoreMatch) {
                 const receivedScore = parseInt(scoreMatch[1], 10); // スコアを数値として取得
                 console.log(`Extracted score: ${receivedScore}`);
