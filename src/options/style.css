@@ -85,3 +85,14 @@ input[type="range"]:active::-webkit-slider-thumb {
     left: 100px;
     top: 50px;
 }
+
+.api-key {
+    position: relative;
+    left: 100px;
+    top: 80px;
+}
+
+.text-input {
+    width: 50%;
+}
+
